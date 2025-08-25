@@ -1,0 +1,61 @@
+EB-->It mantains the Forwarding Table Between the Source and Destination
+
+Forwarding Table-->This is the component responsible for actual Packet processing like where the packet should go next part of Master plane
+
+Bridging code-->Bridges the data or drop at the MAc address unique to each ethernet device
+
+ARP:
+
+	So basically what ARP does is that it bridges the NETWORK LAYER and DATA LINK LAYER(MAC)
+	so when one device want to know the ip address of another but needs MAC address to actually send from
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+IP-table
+
+iptables is a user-space program providing a table-based system for defining rules for manipulating and transforming packets using the netfilter framework. In Kubernetes, iptables rules are configured by the kube-proxy controller that watches the Kubernetes API server for changes. When a change to a Service or Pod updates the virtual IP address of the Service or the IP address of a Pod,
+iptables rules are updated to correctly route traffic directed at a Service to a backing Pod. The iptables rules watch for traffic destined for a Service’s virtual IP and, on a match, 
+a random Pod IP address is selected from the set of available Pods and the iptables rule changes the packet’s destination IP address from the Service’s virtual IP to the IP of the selected Pod. As Pods come up or down, the iptables ruleset is updated to reflect the changing state of the cluster. Put another way, 
+iptables has done load-balancing on the machine to take traffic directed to a service’s IP to an actual pod’s IP.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Container Network Interface
+
+basically it provide the common api for connecting the containers
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Work for IP tables 
+
+kube proxy configure controller-->iptable
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+eth-0
+
+Filter the iptable also
+so basically in cluster load balancing acheived since in future this will remember the ip address.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+WORKONG OF BRIDGE-->
+                
+The Bridge operates by mantaining a forwarding table between the source and desination by examining the destination of data packet that travels through it and decodes
+it whether the packet tot that other network segment connected to the Bridge.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How Egress take parts in networking-->
+
+Kubernetes cluster runs within a VPC, where every Node is assigned a private IP address that is accessible from within the Kubernetes cluster. To make traffic 
+accessible from outside the cluster, you attach an Internet gateway to your VPC. The Internet gateway serves two purposes: providing a target in your VPC route 
+tables for traffic that can be routed to the Internet, and performing network address translation (NAT) for any instances that have been assigned public IP 
+addresses.
+
+How ingress take parts in networking-->
+
+ Ingress is divided into two solutions that work on different parts of the network stack: 
+		
+		(1) a Service LoadBalancer
+		(2) an Ingress controller.
+ 
+The implementation of the LoadBalancer is provided by a cloud controller that knows how to create a load balancer for your service.
+Once your Service is created, it will advertise the IP address for the load balancer
+
+The response from the Pod to the client will return with the Pod’s IP, but the client needs to have the load balancer’s IP address.
+iptables and conntrack is used to rewrite the IPs correctly on the return path
